@@ -1,0 +1,53 @@
+COVID
+
+docker ps -a
+
+from test-network:./network.sh up createChannel -ca -s couchdb
+
+./monitordocker.sh net_test
+
+from Covid/chaincode: npm install
+
+from test-network: export FABRIC_CFG_PATH=$PWD/../config/
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID="Org1MSP"
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=localhost:7051
+
+peer lifecycle chaincode package covid_1.tar.gz --path ../covid/chaincode/ --lang node --label covid_1
+
+nano org1envvars.sh
+
+source org1envvars.sh
+
+peer lifecycle chaincode install covid_1.tar.gz
+
+source org2envvars.sh
+
+peer lifecycle chaincode install covid_1.tar.gz
+
+peer lifecycle chaincode queryinstalled
+
+export CC_PACKAGE_ID=
+
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name covid --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile $ORDERER_TLSCACERT_FILE
+
+source org1envvars.sh
+
+peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name covid --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile $ORDERER_TLSCACERT_FILE
+
+peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name covid --version 1.0 --sequence 1 --tls --cafile ${ORDERER_TLSCACERT_FILE} --output json
+
+peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name covid --version 1.0 --sequence 1 --tls --cafile ${ORDERER_TLSCACERT_FILE} --peerAddresses localhost:7051 --tlsRootCertFiles ${CORE_PEER_TLS_ROOTCERT_FILE} --peerAddresses localhost:9051 --tlsRootCertFiles ${OTHER_PEER_TLS_ROOTCERT_FILE}
+
+peer lifecycle chaincode querycommitted --channelID mychannel --name covid --cafile ${ORDERER_TLSCACERT_FILE}
+
+peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${ORDERER_TLSCACERT_FILE} -C mychannel -n covid --peerAddresses localhost:7051 --tlsRootCertFiles ${CORE_PEER_TLS_ROOTCERT_FILE} --peerAddresses localhost:9051 --tlsRootCertFiles ${OTHER_PEER_TLS_ROOTCERT_FILE} -c '{"function":"initLedger","Args":[]}'
+
+FRONTEND:
+
+cd backend-researcher
+npm install
+node app.js
+same for backend-viewer
