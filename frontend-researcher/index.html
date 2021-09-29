@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Researcher Frontend Application</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="index.js"></script>
+    </head>
+    <body>
+        
+        <div id="viewVariantDiv">View Variant
+            <form method="GET" id="viewVariant">
+                <input type="text" name="generalnameofvariant" id="vvgeneral" value="generalname">
+                <input type="text" name="scientificnameofvariant" id="vvscientific" value="scientificname">
+                <button type="submit">Search</button>
+            </form>
+            <div id="viewvariantdetails">
+            </div>
+        </div>
+        <div>Add New Variant
+            <form method="POST" id="addVariant">
+                <input type="text" name="generalnameofvariant" id="aveneral" value="generalname">
+                <input type="text" name="scientificnameofvariant" id="avscientific" value="scientificname">
+		<input type="text" name="firstidentificationdate" id="avdate" value="date">
+		<input type="text" name="identifiedcountry" id="avcountry" value="country">
+		<input type="text" name="variantcategory" id="avcategory" value="category">
+                <button type="submit">Add New Variant</button>
+            </form>
+        </div>
+    </body>
+</html>

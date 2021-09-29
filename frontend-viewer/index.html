@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Viewer Frontend Application</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="index.js"></script>
+    </head>
+    <body>
+        <div id="allVariantsDiv">Show All Variants
+        </div>
+        <button id="showAll" type="button">Show All Variants</button>
+        <div id="viewVariantDiv">Search Any Specific Variant Details
+            <form method="GET" id="viewVariant">
+                <input type="text" name="generalnameofvariant" id="vvgeneral" value="generalname">
+                <input type="text" name="scientificnameofvariant" id="vvscientific" value="scientificname">
+                <button type="submit">Search</button>
+            </form>
+            <div id="viewvariantdetails">
+            </div>
+        </div>
+    </body>
+</html>
